@@ -1,3 +1,11 @@
+<script>
+    function DisableButton(btn){
+    btn.disabled=true;
+    btn.value='送信中...';
+    btn.form.submit();
+}
+</script>
+
 <x-app-layout>
     <div class="container lg:w-3/4 md:w-4/5 w-11/12 mx-auto my-8 px-8 py-4 bg-white shadow-md">
         <x-validation-errors />
@@ -15,11 +23,11 @@
             <p class="text-gray-700 text-base mb-3">{!! nl2br(e($post->body)) !!}</p>
             @auth
             @if ($like)
-                <a href="{{ route('unlike', $post) }}" class="bg-pink-400 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20 mr-2 mt-2 mb-2">
+                <a href="{{ route('unlike', $post) }}" onclick="if(!confirm('お気に入りを解除しますか？')){return false};" class="bg-pink-400 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20 mr-2 mt-2 mb-2">
                     お気に入り削除
                 </a>
             @else
-                <a href="{{ route('like', $post) }}" class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20 mr-2 mt-2 mb-2">
+                <a href="{{ route('like', $post) }}" onclick="if(!confirm('お気に入りにしますか？')){return false};" class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20 mr-2 mt-2 mb-2">
                     お気に入り
                 </a>
             @endif
