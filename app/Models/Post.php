@@ -37,4 +37,9 @@ class Post extends Model
     {
         return Storage::url($this->image_path);
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }

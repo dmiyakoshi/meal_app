@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -76,7 +77,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('posts.show', compact('post'));
+        $like = Like::where('post_id', $post->id)->where('user_id', auth()->user()->id)->first();
+        return view('posts.show', compact('post', 'like'));
     }
 
     /**
