@@ -36,8 +36,7 @@
         </article>
         <div class="flex flex-row text-center my-4">
             @can('update', $post)
-                <a href="{{ route('posts.edit', $post) }}"
-                    class="bg-indigo-400 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20 mr-2">編集</a>
+                <a href="{{ route('posts.edit', $post) }}" class="bg-indigo-400 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20 h-10 mr-2">編集</a>
             @endcan
             @can('delete', $post)
                 <form action="{{ route('posts.destroy', $post) }}" method="post">
