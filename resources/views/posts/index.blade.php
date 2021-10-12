@@ -16,6 +16,7 @@
                         </p>
                         <img class="w-full mb-2" src="{{ $post->image_url }}" alt="image">
                         <p class="text-gray-700 text-base">{{ Str::limit($post->body, 10) }}</p>
+                        <p class="mt-3">お気に入り数: {{ $post->likes->count() }}</p>
                     </a>
                 </article>
             @endforeach
