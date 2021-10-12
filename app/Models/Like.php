@@ -9,6 +9,8 @@ class Like extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function post()
     {
         return $this->belongsTo(Post::class);
