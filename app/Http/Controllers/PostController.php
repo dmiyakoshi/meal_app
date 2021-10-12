@@ -17,7 +17,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        return view('posts.index');
+        $posts = Post::with('user')->latest()->Paginate(4);
+
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -42,7 +44,11 @@ class PostController extends Controller
     {
         $post = new Post($request->all());
 
+        
+        $post = new Post($request->all());
+        
         $post->user_id = $request->user()->id;
+        $post->category_id = $request->category;
         $file = $request->file('image');
         $post->image = date('YmdHis') . '_' . $file->getClientOriginalName();
 
@@ -81,7 +87,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $categories = Category::all();
+
+        return view('posts.edit', compact('post', 'categories'));
     }
 
     /**
@@ -93,7 +101,40 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        if ($request->user()->cannot('update', $post)) {
+            return redirect()->route('posts.show', $post)->withErrors('自分の記事以外は更新できません');
+        }
+
+        $file = $request->file('image');
+
+        if (!empty($file)) {
+            $delete_file_path = $post->image_path;
+            $post->image = self::createFileName($file);
+        }
+
+        $post->fill($request->all());
+
+        DB::beginTransaction();
+
+        try {
+            $post->save();
+
+            if (!empty($file)) {
+                if (!Storage::putFileAs('images/posts', $file, $post->image)) {
+                    throw new \Exception('画像ファイルの保存に失敗しました');
+                }
+                if (!Storage::delete($delete_file_path)) {
+                    throw new \Exception('画像ファイルの削除に失敗しました');
+                }
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->withErrors($e->getMessage());
+        }
+
+        return redirect()->route('posts.show', $post)->with('notice', '記事を更新しました');
     }
 
     /**
@@ -104,6 +145,16 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        try {
+            $deletePath = 'images/posts/' . $post->image_path;
+            if (!Storage::delete($deletePath)) {
+                throw new \Exception('画像ファイルの削除に失敗しました');
+            }
+            $post->delete();
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+
+        return redirect()->route('posts.index')->with('notice', '記事を削除しました');
     }
 }
