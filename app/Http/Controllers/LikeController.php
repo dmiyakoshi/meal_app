@@ -23,7 +23,6 @@ class LikeController extends Controller
         $user = Auth::user()->id;
         $like = Like::where('post_id', $post->id)->where('user_id', $user)->first();
         $like->delete();
-        $like = 0;
         
         return redirect()->route('posts.show', compact('post', 'like'))->with('notice', 'お気に入りを解除しました');
     }
