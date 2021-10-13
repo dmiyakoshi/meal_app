@@ -30,7 +30,7 @@ Route::resource('posts', PostController::class)
 Route::resource('posts', PostController::class)
         ->only(['index', 'show']);
 
-Route::resource('posts.like', LikeController::class)
+Route::resource('posts.likes', LikeController::class)
         ->middleware('auth')
         ->only(['store', 'destroy']);
 
