@@ -16,15 +16,18 @@
             <p class="text-gray-700 text-base mb-3">{!! nl2br(e($post->body)) !!}</p>
             @auth
                 @if ($like)
-                    <a href="{{ route('unlike', $post) }}" onclick="if(!confirm('お気に入りを解除しますか？')){return false};"
-                        class="bg-pink-400 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20 mr-2 mt-2 mb-2">
-                        お気に入り削除
-                    </a>
+                    <form action="{{ route('posts.like.destroy', [$post, $like]) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="お気に入り削除" onclick="if(!confirm('お気に入りを解除しますか？')){return false};"
+                            class="bg-pink-400 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-100 mr-2 mt-2 mb-2">
+                    </form>
                 @else
-                    <a href="{{ route('like', $post) }}" onclick="if(!confirm('お気に入りにしますか？')){return false};"
-                        class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20 mr-2 mt-2 mb-2">
-                        お気に入り
-                    </a>
+                    <form action="{{ route('posts.like.store', [$post, $like]) }}" method="POST">
+                        @csrf
+                        <input type="submit" value="お気に入り" onclick="if(!confirm('お気に入りにしますか？')){return false};"
+                            class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-100 mr-2 mt-2 mb-2">
+                    </form>
                 @endif
                 <p class="mt-3">お気に入り数: {{ $post->likes->count() }}</p>
             @endauth

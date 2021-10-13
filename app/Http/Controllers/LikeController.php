@@ -9,20 +9,22 @@ use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
 {
-    public function like(Post $post, Request $request)
+    public function store(Post $post, Request $request)
     {
         $like = new Like();
         $like->post_id = $post->id;
         $like->user_id = Auth::user()->id;
         $like->save();
-        return back();
+        return redirect()->route('posts.show', compact('post', 'like'))->with('notice', 'お気に入りにしました');
     }
 
-    public function unlike(Post $post, Request $request)
+    public function destroy(Post $post, Request $request)
     {
         $user = Auth::user()->id;
         $like = Like::where('post_id', $post->id)->where('user_id', $user)->first();
         $like->delete();
-        return back();
+        $like = 0;
+        
+        return redirect()->route('posts.show', compact('post', 'like'))->with('notice', 'お気に入りを解除しました');
     }
 }

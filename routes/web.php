@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [PostController::class, 'index'])
-->name('root');
+        ->name('root');
 
 Route::get('/dashboard', function () {
         return view('dashboard');
@@ -24,13 +24,14 @@ Route::get('/dashboard', function () {
 
 
 Route::resource('posts', PostController::class)
-->middleware('auth')
-->only(['create', 'store', 'edit', 'update', 'destroy']);
+        ->middleware('auth')
+        ->only(['create', 'store', 'edit', 'update', 'destroy']);
 
 Route::resource('posts', PostController::class)
-->only('index', 'show');
+        ->only(['index', 'show']);
 
-Route::get('/reply/like/{post}', [LikeController::class, 'like'])->name('like');
-Route::get('/reply/unlike/{post}', [LikeController::class, 'unlike'])->name('unlike');
+Route::resource('posts.like', LikeController::class)
+        ->middleware('auth')
+        ->only(['store', 'destroy']);
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
