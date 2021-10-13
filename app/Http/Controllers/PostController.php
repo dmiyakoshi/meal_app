@@ -79,6 +79,7 @@ class PostController extends Controller
         } else {
             $like = 0;
         }
+        
         return view('posts.show', compact('post', 'like'));
     }
 

@@ -5,8 +5,7 @@ namespace Database\Factories;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Arr;
-use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,8 +32,9 @@ class PostFactory extends Factory
 
 
         return [
-            'user_id' => Arr::random(Arr::pluck(User::all(), 'id')),
-            'category_id' => Arr::random(Arr::pluck(Category::all(), 'id')),
+            
+            'user_id' => DB::table('users')->inRandomOrder()->first()->id,
+            'category_id' => DB::table('categories')->inRandomOrder()->first()->id,
             'title' => $this->faker->word(),
             'body' => $this->faker->paragraph(),
             'image' => $fileName,
